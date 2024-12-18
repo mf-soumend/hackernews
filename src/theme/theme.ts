@@ -8,7 +8,6 @@ import { colors } from "theme/colors";
 import { ExtendedTheme, ThemeWithMode } from "theme/theme.types";
 
 export type Colors = typeof lightThemeColors;
-export type ThemeList = keyof typeof theme;
 
 /**
  * theme

@@ -3,13 +3,13 @@
  */
 export const typography = {
   /** Light font family with font weight 300 */
-  light: "Poppins-Light",
+  light: "Poppins_300Light",
   /** Regular font family with font weight 400 */
-  regular: "Poppins-Regular",
+  regular: "Poppins_400Regular",
   /** Medium font family with font weight 500 */
-  medium: "Poppins-Medium",
+  medium: "Poppins_500Medium",
   /** SemiBold font family with font weight 600 */
-  semiBold: "Poppins-SemiBold",
+  semiBold: "Poppins_600SemiBold",
   /** Bold font family with font weight 700 */
-  bold: "Poppins-Bold",
+  bold: "Poppins_700Bold",
 };

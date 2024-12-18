@@ -8,7 +8,7 @@
       "theme": ["./src/theme"],
       "theme/*": ["./src/theme/*"],
       "settings": ["./settings"],
-      "assets/*": ["./assets/*"],
+      "assets/*": ["./src/assets/*"],
       "screens": ["./src/screens"],
       "components/*": ["./src/components/*"],
       "navigation":["./src/navigation"],
