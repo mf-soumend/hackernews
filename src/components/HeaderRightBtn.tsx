@@ -21,6 +21,6 @@ export default HeaderRightBtn;
 
 const styles = StyleSheet.create({
   btnContainer: {
-    marginRight: spacing.sm,
+    marginRight: spacing.md,
   },
 });
