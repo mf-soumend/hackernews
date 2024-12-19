@@ -8,8 +8,6 @@ import { TabNavigator } from "./tabNavigator";
 
 export type PrimaryParamList = {
   home: undefined;
-  news: undefined;
-  profile: undefined;
 };
 export type PrimaryScreenProps<T extends keyof PrimaryParamList> =
   NativeStackScreenProps<PrimaryParamList, T>;

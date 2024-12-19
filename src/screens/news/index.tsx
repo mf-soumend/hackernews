@@ -1,16 +1,54 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { FC } from "react";
-import { Colors, typography } from "src/theme";
+import { TabScreenProps } from "src/navigation";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import NewNews from "../newNews";
+import PastNews from "../pastNews";
+import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
+import Header from "src/components/Header";
 import { useTheme } from "@react-navigation/native";
-import { PrimaryScreenProps } from "src/navigation";
+import { Colors } from "src/theme";
+import { Platform, StyleSheet } from "react-native";
 
-const NewsScreen: FC<PrimaryScreenProps<"news">> = () => {
+export type DrawerParamList = {
+  new: undefined;
+  past: undefined;
+};
+const Drawer = createDrawerNavigator<DrawerParamList>();
+
+const NewsScreen: FC<TabScreenProps<"news">> = () => {
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>News</Text>
-    </View>
+    <>
+      <Drawer.Navigator
+        initialRouteName="new"
+        screenOptions={{
+          headerShadowVisible: false,
+          header: ({ navigation, options }) => {
+            return (
+              <Header
+                headerText={options.title}
+                headerLeftIcon={faBarsStaggered}
+                showHeaderRight={false}
+                onPressLeft={navigation.openDrawer}
+              />
+            );
+          },
+          drawerStyle: styles.drawerContainer,
+        }}
+      >
+        <Drawer.Screen
+          name="new"
+          component={NewNews}
+          options={{ title: "New news" }}
+        />
+        <Drawer.Screen
+          name="past"
+          component={PastNews}
+          options={{ title: "Past news" }}
+        />
+      </Drawer.Navigator>
+    </>
   );
 };
 
@@ -18,14 +56,10 @@ export default NewsScreen;
 
 const makeStyle = (colors: Colors) =>
   StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
+    drawerContainer: {
       backgroundColor: colors.backgroundSecondary,
-    },
-    text: {
-      textAlign: "center",
-      color: colors.text,
-      fontFamily: typography.medium,
+      borderEndEndRadius: 0,
+      borderEndStartRadius: 0,
+      width: Platform.OS === "android" || Platform.OS === "ios" ? "50%" : 300,
     },
   });

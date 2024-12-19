@@ -1,7 +1,8 @@
-import { StyleSheet } from "react-native";
-import React from "react";
+import { Platform, StyleSheet } from "react-native";
+import React, { FC } from "react";
 import {
   BottomTabNavigationOptions,
+  BottomTabScreenProps,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import NewsScreen from "src/screens/news";
@@ -11,11 +12,13 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faNewspaper, faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@react-navigation/native";
 import { Colors, fontSize, lineHeight, spacing, typography } from "src/theme";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { verticalScale as vs } from "src/utils";
-import HeaderRightBtn from "src/components/HeaderRightBtn";
-import HeaderLeftBtn from "src/components/HeaderLeftBtn";
-import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
+import Header from "src/components/Header";
+import { PrimaryScreenProps } from "./primaryNavigator";
 
 export type TabParamsList = {
   news: undefined;
@@ -27,7 +30,10 @@ export type TabParamsList = {
  */
 const Tab = createBottomTabNavigator<TabParamsList>();
 
-export const TabNavigator = () => {
+export type TabScreenProps<T extends keyof TabParamsList> =
+  BottomTabScreenProps<TabParamsList, T>;
+
+export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const insets = useSafeAreaInsets();
@@ -36,22 +42,28 @@ export const TabNavigator = () => {
    * Screen options for tab navigator
    */
   const screenOptions: BottomTabNavigationOptions = {
+    animation: "shift",
     tabBarStyle: [
       styles.container,
       styles.tabShadow,
       {
-        height: vs(70) + insets.bottom,
+        height:
+          Platform.OS !== "ios" && Platform.OS !== "android"
+            ? vs(50) + insets.bottom
+            : vs(70) + insets.bottom,
       },
     ],
     tabBarLabelStyle: styles.tabLabel,
     tabBarActiveTintColor: colors.primary,
     tabBarInactiveTintColor: colors.tertiary,
-    headerShown: true,
-    headerShadowVisible: false,
-    headerStyle: styles.header,
-    headerTitleStyle: styles.headerTitle,
-    headerLeft: () => {
-      return <HeaderLeftBtn icon={faBarsStaggered} handlePress={() => {}} />;
+    header: ({ options }) => {
+      return (
+        <Header
+          headerText={options.title}
+          showHeaderRight={false}
+          showHeaderLeft={false}
+        />
+      );
     },
   };
 
@@ -74,24 +86,33 @@ export const TabNavigator = () => {
     ),
   });
   return (
-    <Tab.Navigator initialRouteName="news" screenOptions={screenOptions}>
-      <Tab.Screen
-        name="news"
-        component={NewsScreen}
-        options={generateScreenOptions({
-          title: "News",
-          icon: faNewspaper,
-        })}
-      />
-      <Tab.Screen
-        name="profile"
-        component={ProfileScreen}
-        options={generateScreenOptions({
-          title: "Profile",
-          icon: faUser,
-        })}
-      />
-    </Tab.Navigator>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Tab.Navigator
+        detachInactiveScreens
+        initialRouteName="news"
+        screenOptions={screenOptions}
+      >
+        <Tab.Screen
+          name="news"
+          component={NewsScreen}
+          options={{
+            ...generateScreenOptions({
+              title: "News",
+              icon: faNewspaper,
+            }),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="profile"
+          component={ProfileScreen}
+          options={generateScreenOptions({
+            title: "Profile",
+            icon: faUser,
+          })}
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
@@ -114,14 +135,5 @@ const makeStyles = (colors: Colors) =>
       fontSize: fontSize.body,
       lineHeight: lineHeight[fontSize.body],
       fontFamily: typography.medium,
-    },
-    header: {
-      backgroundColor: colors.background,
-    },
-    headerTitle: {
-      fontSize: vs(22),
-      fontFamily: typography.medium,
-      color: colors.text,
-      marginLeft: 15,
     },
   });
