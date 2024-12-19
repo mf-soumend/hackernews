@@ -60,6 +60,6 @@ const makeStyle = (colors: Colors) =>
       backgroundColor: colors.backgroundSecondary,
       borderEndEndRadius: 0,
       borderEndStartRadius: 0,
-      width: Platform.OS === "android" || Platform.OS === "ios" ? "50%" : 300,
+      width: Platform.OS === "android" || Platform.OS === "ios" ? "60%" : 300,
     },
   });
