@@ -1,32 +1,40 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Colors } from "src/theme";
 import { fetchNewNews } from "src/service";
-import StoryCard from "src/components/StoryCard";
-import Pagination from "src/components/Pagination";
 import { DrawerProps } from "../news";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectLastUpdatedNew,
+  selectLastUpdatedTop,
+  selectNewNews,
+  selectTopNews,
+  setNewNews,
+  setTopNews,
+} from "src/store";
+import NewsScrollingScreen from "./NewsScrollingScreen";
+import { needToReload } from "src/utils";
 
 const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
   const { params } = route;
   const topic = params.topic;
+  const dispatch = useDispatch();
+  const savedNews = useSelector(
+    topic === "new" ? selectNewNews : selectTopNews
+  );
+  const lastUpdated = useSelector(
+    topic === "new" ? selectLastUpdatedNew : selectLastUpdatedTop
+  );
   const itemPerPage = 15;
-  const flatListRef = useRef<FlatList<any>>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
-  const [data, setData] = useState<any>();
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   const getNewNews = () => {
     fetchNewNews(topic).then((res) => {
-      setData(res);
+      dispatch(topic === "new" ? setNewNews(res) : setTopNews(res));
       setPage(1);
       setLoading(false);
       setRefreshing(false);
@@ -39,15 +47,13 @@ const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    getNewNews();
-  }, []);
-
-  useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({ offset: 0 });
+    if (savedNews?.length === 0 || needToReload(lastUpdated)) {
+      setLoading(true);
+      getNewNews();
+    } else {
+      setLoading(false);
     }
-  }, [page]);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -56,28 +62,14 @@ const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
           <ActivityIndicator size={"large"} />
         </View>
       ) : (
-        <>
-          <FlatList
-            ref={flatListRef}
-            data={data.slice((page - 1) * itemPerPage, page * itemPerPage)}
-            renderItem={({ item }) => {
-              return <StoryCard id={item} />;
-            }}
-            keyExtractor={(item) => item}
-            style={styles.listWrapper}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContainer}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          />
-          <Pagination
-            total={data?.length ?? 0}
-            page={page}
-            setPage={setPage}
-            itemPerPage={itemPerPage}
-          />
-        </>
+        <NewsScrollingScreen
+          refreshing={refreshing}
+          data={savedNews}
+          itemPerPage={itemPerPage}
+          onRefresh={onRefresh}
+          page={page}
+          setPage={setPage}
+        />
       )}
     </View>
   );

@@ -24,3 +24,14 @@ export const getDateTime = (timeStamp: number) => {
     return date.toLocaleDateString(); // Return only date string
   }
 };
+
+export const needToReload = (timeStamp: number): boolean => {
+  // Calculate the difference in milliseconds
+  const diffInMs = Date.now() - timeStamp;
+
+  // Convert milliseconds to minutes (accounting for potential rounding errors)
+  const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+
+  // Check if the difference is greater than 5 minutes
+  return diffInMinutes > 5;
+};
