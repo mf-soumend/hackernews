@@ -11,8 +11,11 @@ import { Colors } from "src/theme";
 import { fetchNewNews } from "src/service";
 import StoryCard from "src/components/StoryCard";
 import Pagination from "src/components/Pagination";
+import { DrawerProps } from "../news";
 
-const NewNews = () => {
+const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
+  const { params } = route;
+  const topic = params.topic;
   const itemPerPage = 15;
   const flatListRef = useRef<FlatList<any>>(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +25,7 @@ const NewNews = () => {
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   const getNewNews = () => {
-    fetchNewNews().then((res) => {
+    fetchNewNews(topic).then((res) => {
       setData(res);
       setPage(1);
       setLoading(false);
@@ -80,7 +83,7 @@ const NewNews = () => {
   );
 };
 
-export default NewNews;
+export default NewsTopicScreen;
 
 const makeStyle = (colors: Colors) =>
   StyleSheet.create({

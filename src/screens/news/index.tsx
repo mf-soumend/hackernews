@@ -1,8 +1,10 @@
 import React, { FC } from "react";
 import { TabScreenProps } from "src/navigation";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import NewNews from "../newNews";
-import PastNews from "../pastNews";
+import {
+  createDrawerNavigator,
+  DrawerScreenProps,
+} from "@react-navigation/drawer";
+import NewsTopicScreen from "../newsTopics";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import Header from "src/components/Header";
 import { useTheme } from "@react-navigation/native";
@@ -10,9 +12,13 @@ import { Colors } from "src/theme";
 import { Platform, StyleSheet } from "react-native";
 
 export type DrawerParamList = {
-  new: undefined;
-  past: undefined;
+  new: { topic: string };
+  top: { topic: string };
 };
+export type DrawerProps<T extends keyof DrawerParamList> = DrawerScreenProps<
+  DrawerParamList,
+  T
+>;
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const NewsScreen: FC<TabScreenProps<"news">> = () => {
@@ -39,13 +45,15 @@ const NewsScreen: FC<TabScreenProps<"news">> = () => {
       >
         <Drawer.Screen
           name="new"
-          component={NewNews}
+          component={NewsTopicScreen}
           options={{ title: "New news" }}
+          initialParams={{ topic: "new" }}
         />
         <Drawer.Screen
-          name="past"
-          component={PastNews}
-          options={{ title: "Past news" }}
+          name="top"
+          component={NewsTopicScreen}
+          options={{ title: "Top news" }}
+          initialParams={{ topic: "top" }}
         />
       </Drawer.Navigator>
     </>
