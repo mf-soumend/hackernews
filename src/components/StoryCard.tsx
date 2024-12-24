@@ -1,7 +1,18 @@
 import { useDispatch } from "react-redux";
 import React, { FC, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import {
+  NavigationProp,
+  useNavigation,
+  useTheme,
+} from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUserTag } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,6 +21,7 @@ import { Colors, fontSize, typography } from "src/theme";
 import { getDateTime } from "utils";
 import { setStoryData } from "store";
 import { decode } from "html-entities";
+import { PrimaryParamList } from "src/navigation";
 
 interface StroyProps {
   item: {
@@ -20,10 +32,12 @@ interface StroyProps {
     text?: string;
     by?: string;
     time?: number;
+    url?: string;
   };
 }
 
 const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
+  const navigation = useNavigation<NavigationProp<PrimaryParamList>>();
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   const dispatch = useDispatch();
@@ -62,8 +76,17 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
       </View>
     );
   }
+  const openWebView = () => {
+    if (!loading && !hasError) {
+      if (Platform.OS !== "android" && Platform.OS !== "ios") {
+        window.open(item?.url, "_blank");
+      } else {
+        navigation.navigate("newsDetails", { url: item?.url });
+      }
+    }
+  };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={openWebView}>
       {loading ? (
         <View style={styles.loader}>
           <ActivityIndicator size={"small"} />
@@ -95,7 +118,7 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
           </View>
         </>
       )}
-    </View>
+    </TouchableOpacity>
   );
 });
 
