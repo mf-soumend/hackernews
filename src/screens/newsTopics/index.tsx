@@ -1,9 +1,9 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Colors } from "src/theme";
 import { fetchNewNews } from "src/service";
-import { DrawerProps } from "../news";
+import { DrawerProps } from "src/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectLastUpdatedNew,
@@ -29,16 +29,25 @@ const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
   const itemPerPage = 15;
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [hasError, setHasError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   const getNewNews = () => {
-    fetchNewNews(topic).then((res) => {
-      dispatch(topic === "new" ? setNewNews(res) : setTopNews(res));
-      setPage(1);
-      setLoading(false);
-      setRefreshing(false);
-    });
+    fetchNewNews(topic)
+      .then((res) => {
+        dispatch(topic === "new" ? setNewNews(res) : setTopNews(res));
+        setHasError(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setHasError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+        setRefreshing(false);
+        setPage(1);
+      });
   };
 
   const onRefresh = () => {
@@ -54,6 +63,13 @@ const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
       setLoading(false);
     }
   }, []);
+  if (hasError) {
+    return (
+      <View style={styles.container}>
+        <Text>Error while fetching news..</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

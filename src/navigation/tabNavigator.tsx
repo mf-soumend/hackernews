@@ -5,7 +5,7 @@ import {
   BottomTabScreenProps,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import NewsScreen from "src/screens/news";
+import NewsDrawer from "./drawerNavigator";
 import ProfileScreen from "src/screens/profile";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -94,7 +94,7 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
       >
         <Tab.Screen
           name="news"
-          component={NewsScreen}
+          component={NewsDrawer}
           options={{
             ...generateScreenOptions({
               title: "News",
@@ -129,7 +129,7 @@ const makeStyles = (colors: Colors) =>
       paddingHorizontal: vs(spacing.xl),
     },
     tabShadow: {
-      shadowColor: colors.transparent,
+      boxShadow: "none",
     },
     tabLabel: {
       fontSize: fontSize.body,

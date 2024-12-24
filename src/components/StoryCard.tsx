@@ -9,7 +9,7 @@ import { fetchNewsDetails } from "src/service";
 import { Colors, fontSize, typography } from "src/theme";
 import { getDateTime } from "utils";
 import { setStoryData } from "store";
-import RenderHTML from "react-native-render-html";
+import { decode } from "html-entities";
 
 interface StroyProps {
   item: {
@@ -28,17 +28,25 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
   const styles = makeStyle(colors);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(!item.isLoaded);
+  const [hasError, setHasError] = useState(false);
   const getStoryDetails = () => {
     setLoading(true);
-    fetchNewsDetails(item.id.toString()).then((res) => {
-      dispatch(
-        setStoryData({
-          topic: item.topic,
-          story: { ...item, ...res, ...{ isLoaded: true } },
-        })
-      );
-      setLoading(false);
-    });
+    fetchNewsDetails(item.id.toString())
+      .then((res) => {
+        dispatch(
+          setStoryData({
+            topic: item.topic,
+            story: { ...item, ...res, ...{ isLoaded: true } },
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        setHasError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
   useEffect(() => {
     if (!item.isLoaded) {
@@ -47,6 +55,13 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
       setLoading(false);
     }
   }, [item.isLoaded]);
+  if (hasError) {
+    return (
+      <View style={styles.container}>
+        <Text>Error while fetching details</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       {loading ? (
@@ -59,15 +74,13 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
             {item?.title ?? "No data"}
           </Text>
           {item?.text && (
-            <RenderHTML
-              baseStyle={styles.description}
-              source={{
-                html:
-                  item.text.length > 200
-                    ? item.text.slice(0, 200).concat("...")
-                    : item.text,
-              }}
-            />
+            <Text
+              numberOfLines={4}
+              accessibilityLanguage="html"
+              style={styles.description}
+            >
+              {decode(item.text)}
+            </Text>
           )}
           <View style={styles.user}>
             <FontAwesomeIcon

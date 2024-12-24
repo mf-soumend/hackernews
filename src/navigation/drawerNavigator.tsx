@@ -4,7 +4,7 @@ import {
   createDrawerNavigator,
   DrawerScreenProps,
 } from "@react-navigation/drawer";
-import NewsTopicScreen from "../newsTopics";
+import NewsTopicScreen from "src/screens/newsTopics";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import Header from "src/components/Header";
 import { useTheme } from "@react-navigation/native";
@@ -21,7 +21,7 @@ export type DrawerProps<T extends keyof DrawerParamList> = DrawerScreenProps<
 >;
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
-const NewsScreen: FC<TabScreenProps<"news">> = () => {
+const NewsDrawer: FC<TabScreenProps<"news">> = () => {
   const { colors } = useTheme();
   const styles = makeStyle(colors);
   return (
@@ -60,7 +60,7 @@ const NewsScreen: FC<TabScreenProps<"news">> = () => {
   );
 };
 
-export default NewsScreen;
+export default NewsDrawer;
 
 const makeStyle = (colors: Colors) =>
   StyleSheet.create({

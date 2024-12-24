@@ -37,7 +37,7 @@ const NewsScrollingScreen: FC<NewsScrollingScreenProps> = ({
         ref={flatListRef}
         data={data.slice((page - 1) * itemPerPage, page * itemPerPage)}
         renderItem={({ item }) => {
-          return <StoryCard item={item} />;
+          return <StoryCard key={item.id} item={item} />;
         }}
         keyExtractor={(item) => item?.id}
         style={styles.listWrapper}
