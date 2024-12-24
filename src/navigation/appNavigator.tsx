@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useMemo } from "react";
 import { useColorScheme } from "react-native";
 import { darkTheme, lightTheme } from "src/theme";
-import { PrimaryNavigator } from "navigation";
+import { PrimaryNavigator } from "src/navigation/primaryNavigator";
 import {
   useFonts,
   Poppins_300Light,

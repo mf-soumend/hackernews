@@ -15,7 +15,9 @@
       "utils":["./src/utils"],
       "store":["./src/store"],
       "store/*":["./src/store/*"],
-      "slices/*" : ["./src/store/slices/*"]
+      "slices/*" : ["./src/store/slices/*"],
+      "api": ["./src/api"],
+      "service" : ["./src/service"]
     }
   }
 }
