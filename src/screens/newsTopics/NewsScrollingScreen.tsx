@@ -1,13 +1,13 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, FC, SetStateAction, useMemo } from "react";
 import { FlatList, RefreshControl, StyleSheet } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 import { Colors } from "theme";
 import StoryCard from "components/StoryCard";
-import Pagination from "components/Pagination";
+import { Story } from "src/store";
 
 interface NewsScrollingScreenProps {
-  data: [];
+  data: Story[];
   page: number;
   itemPerPage: number;
   refreshing: boolean;
@@ -23,35 +23,43 @@ const NewsScrollingScreen: FC<NewsScrollingScreenProps> = ({
   onRefresh,
   setPage,
 }) => {
-  const flatListRef = useRef<FlatList<any>>(null);
   const { colors } = useTheme();
   const styles = makeStyle(colors);
-  useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToOffset({ offset: 0 });
+
+  // Memoized data for current page
+  const paginatedData = useMemo(
+    () => data.slice(0, page * itemPerPage),
+    [data, page, itemPerPage]
+  );
+
+  // Memorized data length
+
+  const dataLength = useMemo(() => {
+    return data.length;
+  }, [data]);
+
+  // Load more data when reaching the end
+  const loadMore = () => {
+    if (page * itemPerPage < dataLength) {
+      setPage((prevPage) => prevPage + 1);
     }
-  }, [page]);
+  };
   return (
     <>
       <FlatList
-        ref={flatListRef}
-        data={data.slice((page - 1) * itemPerPage, page * itemPerPage)}
+        data={paginatedData}
         renderItem={({ item }) => {
           return <StoryCard key={item.id} item={item} />;
         }}
-        keyExtractor={(item) => item?.id}
+        keyExtractor={(item) => item.id.toString()}
         style={styles.listWrapper}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-      />
-      <Pagination
-        total={data?.length ?? 0}
-        page={page}
-        setPage={setPage}
-        itemPerPage={itemPerPage}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.5}
       />
     </>
   );
