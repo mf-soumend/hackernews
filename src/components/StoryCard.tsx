@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import React, { FC, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -19,28 +18,19 @@ import { faUserTag } from "@fortawesome/free-solid-svg-icons";
 import { fetchNewsDetails } from "src/service";
 import { Colors, fontSize, typography } from "src/theme";
 import { getDateTime } from "utils";
-import { setStoryData } from "store";
+import { setStoryData, Story, useAppDispatch } from "store";
 import { decode } from "html-entities";
 import { PrimaryParamList } from "src/navigation";
 
 interface StroyProps {
-  item: {
-    id: number;
-    isLoaded: boolean;
-    topic: string;
-    title?: string;
-    text?: string;
-    by?: string;
-    time?: number;
-    url?: string;
-  };
+  item: Story;
 }
 
 const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
   const navigation = useNavigation<NavigationProp<PrimaryParamList>>();
   const { colors } = useTheme();
   const styles = makeStyle(colors);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(!item.isLoaded);
   const [hasError, setHasError] = useState(false);
   const getStoryDetails = () => {

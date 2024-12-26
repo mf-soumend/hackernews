@@ -2,65 +2,52 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Colors } from "src/theme";
-import { fetchNewNews } from "src/service";
 import { DrawerProps } from "src/navigation";
-import { useDispatch, useSelector } from "react-redux";
 import {
+  fetchNewsThunk,
+  selectError,
   selectLastUpdatedNew,
   selectLastUpdatedTop,
+  selectLoading,
   selectNewNews,
   selectTopNews,
-  setNewNews,
-  setTopNews,
+  useAppDispatch,
+  useAppSelector,
 } from "src/store";
 import NewsScrollingScreen from "./NewsScrollingScreen";
 import { needToReload } from "src/utils";
 
 const NewsTopicScreen = ({ route }: DrawerProps<"new" | "top">) => {
+  const itemPerPage = 15;
   const { params } = route;
-  const topic = params.topic;
-  const dispatch = useDispatch();
-  const savedNews = useSelector(
+  const topic = params.topic as "new" | "top";
+  const dispatch = useAppDispatch();
+  const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const savedNews = useAppSelector(
     topic === "new" ? selectNewNews : selectTopNews
   );
-  const lastUpdated = useSelector(
+  const lastUpdated = useAppSelector(
     topic === "new" ? selectLastUpdatedNew : selectLastUpdatedTop
   );
-  const itemPerPage = 15;
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasError, setHasError] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const loading = useAppSelector(selectLoading);
+  const hasError = useAppSelector(selectError);
   const { colors } = useTheme();
   const styles = makeStyle(colors);
-  const getNewNews = () => {
-    fetchNewNews(topic)
-      .then((res) => {
-        dispatch(topic === "new" ? setNewNews(res) : setTopNews(res));
-        setHasError(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setHasError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-        setRefreshing(false);
-        setPage(1);
-      });
+  const fetchNewsList = () => {
+    dispatch(fetchNewsThunk(topic)).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   const onRefresh = () => {
     setRefreshing(true);
-    getNewNews();
+    fetchNewsList();
   };
 
   useEffect(() => {
-    if (savedNews?.length === 0 || needToReload(lastUpdated)) {
-      setLoading(true);
-      getNewNews();
-    } else {
-      setLoading(false);
+    if (!savedNews?.length || needToReload(lastUpdated)) {
+      fetchNewsList();
     }
   }, []);
   if (hasError) {
