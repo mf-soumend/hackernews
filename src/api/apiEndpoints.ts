@@ -1,5 +1,7 @@
 export const endPoints = {
-  auth: {},
+  auth: {
+    fetchUserDetails: "https://www.googleapis.com/userinfo/v2/me",
+  },
   news: {
     // new 500 stories
     newNews: "newstories.json",

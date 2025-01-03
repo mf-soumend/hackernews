@@ -2,6 +2,7 @@
   "expo": {
     "name": "hackernews",
     "slug": "hackernews",
+    "scheme": "hackernews",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -19,10 +20,25 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.hackernews"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c0fad226-3b50-4651-96b8-8ac182520cdd"
+      },
+      "plugins": [
+        [
+          "@react-native-google-signin/google-signin",
+          {
+            "iosUrlScheme": "com.googleusercontent.apps.811126382439-p00j9kjd8uk9ggukotu4lis039a7312j"
+          }
+        ]
+      ]
+    },
+    "owner": "mfsi-soumend"
   }
 }

@@ -35,4 +35,5 @@ export const colors = {
   darkGunmetal: "#1b1c32",
   freeBlue: "#02655c",
   boxShadow: "#e3e3e3",
+  blue: "#3367d6",
 };

@@ -7,9 +7,6 @@ import {
 } from "@react-navigation/bottom-tabs";
 import NewsDrawer from "./drawerNavigator";
 import ProfileScreen from "src/screens/profile";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faNewspaper, faUser } from "@fortawesome/free-regular-svg-icons";
 import { useTheme } from "@react-navigation/native";
 import { Colors, fontSize, lineHeight, spacing, typography } from "src/theme";
 import {
@@ -19,6 +16,8 @@ import {
 import { verticalScale as vs } from "src/utils";
 import Header from "src/components/Header";
 import { PrimaryScreenProps } from "./primaryNavigator";
+import { selectIsAuthenticated, useAppSelector } from "src/store";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export type TabParamsList = {
   news: undefined;
@@ -37,6 +36,8 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const insets = useSafeAreaInsets();
+
+  const userIsAuthenticated = useAppSelector(selectIsAuthenticated);
 
   /**
    * Screen options for tab navigator
@@ -78,11 +79,11 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
     icon,
   }: {
     title: string;
-    icon: IconDefinition;
+    icon: string;
   }): BottomTabNavigationOptions => ({
     title: title,
     tabBarIcon: ({ color }) => (
-      <FontAwesomeIcon icon={icon} size={20} color={color} />
+      <FontAwesome6 name={icon} size={20} color={color} />
     ),
   });
   return (
@@ -98,7 +99,7 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
           options={{
             ...generateScreenOptions({
               title: "News",
-              icon: faNewspaper,
+              icon: "newspaper",
             }),
             headerShown: false,
           }}
@@ -106,10 +107,13 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
         <Tab.Screen
           name="profile"
           component={ProfileScreen}
-          options={generateScreenOptions({
-            title: "Profile",
-            icon: faUser,
-          })}
+          options={{
+            ...generateScreenOptions({
+              title: "Profile",
+              icon: "user",
+            }),
+            headerShown: userIsAuthenticated,
+          }}
         />
       </Tab.Navigator>
     </SafeAreaView>

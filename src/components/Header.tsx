@@ -8,11 +8,6 @@ import {
   ViewStyle,
 } from "react-native";
 import React, { FC } from "react";
-import {
-  faArrowLeft,
-  faArrowRight,
-  IconDefinition,
-} from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "@react-navigation/native";
 import { Colors, typography } from "src/theme";
 import HeaderBtn from "./HeaderBtn";
@@ -31,10 +26,10 @@ interface HeaderProps extends ViewProps {
   textStyle?: StyleProp<TextStyle>;
   // header left icon and visibility
   showHeaderLeft?: boolean;
-  headerLeftIcon?: IconDefinition;
+  headerLeftIcon?: string;
   // header right icon and visibility
   showHeaderRight?: boolean;
-  headerRightIcon?: IconDefinition;
+  headerRightIcon?: string;
 }
 
 const Header: FC<HeaderProps> = ({
@@ -45,8 +40,8 @@ const Header: FC<HeaderProps> = ({
   textStyle,
   showHeaderLeft = true,
   showHeaderRight = true,
-  headerLeftIcon = faArrowLeft,
-  headerRightIcon = faArrowRight,
+  headerLeftIcon = "arrow-left",
+  headerRightIcon = "arrow-right",
   ...rest
 }) => {
   const { colors } = useTheme();

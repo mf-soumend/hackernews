@@ -1,10 +1,9 @@
 import { TouchableOpacity } from "react-native";
 import React, { FC } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 interface HeaderBtnProps {
-  icon: IconDefinition;
+  icon: string;
   color?: string;
   handlePress?: () => void;
 }
@@ -16,7 +15,7 @@ const HeaderBtn: FC<HeaderBtnProps> = ({
 }) => {
   return (
     <TouchableOpacity onPress={handlePress}>
-      <FontAwesomeIcon icon={icon} size={20} color={color} />
+      <FontAwesome6 name={icon} size={20} color={color} />
     </TouchableOpacity>
   );
 };
