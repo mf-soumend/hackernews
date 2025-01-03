@@ -40,3 +40,6 @@ package-lock.json
 .env
 android/
 .npmrc
+
+*firebase-adminsdk*
+google-services.json

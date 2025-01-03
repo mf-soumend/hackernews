@@ -15,9 +15,6 @@ const UserProfile = () => {
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const styles = makeStyle(colors);
-  useEffect(() => {
-    console.log(user);
-  }, []);
   return (
     <View style={styles.container}>
       <Image src={user?.picture} style={styles.profilePicture} />
