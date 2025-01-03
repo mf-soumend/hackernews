@@ -19,6 +19,7 @@ import {
 import { verticalScale as vs } from "src/utils";
 import Header from "src/components/Header";
 import { PrimaryScreenProps } from "./primaryNavigator";
+import { selectIsAuthenticated, useAppSelector } from "src/store";
 
 export type TabParamsList = {
   news: undefined;
@@ -37,6 +38,8 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const insets = useSafeAreaInsets();
+
+  const userIsAuthenticated = useAppSelector(selectIsAuthenticated);
 
   /**
    * Screen options for tab navigator
@@ -106,10 +109,13 @@ export const TabNavigator: FC<PrimaryScreenProps<"home">> = () => {
         <Tab.Screen
           name="profile"
           component={ProfileScreen}
-          options={generateScreenOptions({
-            title: "Profile",
-            icon: faUser,
-          })}
+          options={{
+            ...generateScreenOptions({
+              title: "Profile",
+              icon: faUser,
+            }),
+            headerShown: userIsAuthenticated,
+          }}
         />
       </Tab.Navigator>
     </SafeAreaView>

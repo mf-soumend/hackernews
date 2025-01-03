@@ -3,14 +3,20 @@ import React, { FC } from "react";
 import { Colors, typography } from "src/theme";
 import { useTheme } from "@react-navigation/native";
 import { TabScreenProps } from "src/navigation";
+import { selectIsAuthenticated, useAppSelector } from "src/store";
+import LoginScreen from "../login";
 
 const ProfileScreen: FC<TabScreenProps<"profile">> = () => {
   const { colors } = useTheme();
   const styles = makeStyle(colors);
-  return (
+  const userIsAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  return userIsAuthenticated ? (
     <View style={styles.container}>
       <Text style={styles.text}>Profile</Text>
     </View>
+  ) : (
+    <LoginScreen />
   );
 };
 
