@@ -12,8 +12,6 @@ import {
   useNavigation,
   useTheme,
 } from "@react-navigation/native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faUserTag } from "@fortawesome/free-solid-svg-icons";
 
 import { fetchNewsDetails } from "src/service";
 import { Colors, fontSize, typography } from "src/theme";
@@ -21,6 +19,7 @@ import { getDateTime } from "utils";
 import { setStoryData, Story, useAppDispatch } from "store";
 import { decode } from "html-entities";
 import { PrimaryParamList } from "src/navigation";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface StroyProps {
   item: Story;
@@ -96,8 +95,8 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
             </Text>
           )}
           <View style={styles.user}>
-            <FontAwesomeIcon
-              icon={faUserTag}
+            <AntDesign
+              name="user"
               size={fontSize.body}
               color={colors.freeBlue}
             />

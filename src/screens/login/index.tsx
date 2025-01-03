@@ -5,9 +5,8 @@ import * as WebBrowser from "expo-web-browser";
 import { loginUser, useAppDispatch } from "src/store";
 import { Colors, fontSize, typography } from "src/theme";
 import { useTheme } from "@react-navigation/native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faG } from "@fortawesome/free-solid-svg-icons";
 import { fetchUserDetails } from "src/service";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,7 +25,7 @@ const LoginScreen = () => {
   const getUserInfo = useCallback(
     async (token: string) => {
       try {
-        const { data } = await fetchUserDetails(token);
+        const data = await fetchUserDetails(token);
         dispatch(loginUser({ user: { ...data, token } }));
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -55,7 +54,7 @@ const LoginScreen = () => {
           style={styles.loginBtn}
           disabled={!request}
         >
-          <FontAwesomeIcon icon={faG} size={fontSize.h2} color={colors.white} />
+          <FontAwesome6 name="google" size={fontSize.h2} color={colors.white} />
           <Text style={styles.btnText}>Sign in with Google</Text>
         </TouchableOpacity>
       </View>

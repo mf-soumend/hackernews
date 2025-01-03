@@ -5,7 +5,6 @@ import {
   DrawerScreenProps,
 } from "@react-navigation/drawer";
 import NewsTopicScreen from "src/screens/newsTopics";
-import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import Header from "src/components/Header";
 import { useTheme } from "@react-navigation/native";
 import { Colors } from "src/theme";
@@ -34,7 +33,7 @@ const NewsDrawer: FC<TabScreenProps<"news">> = () => {
             return (
               <Header
                 headerText={options.title}
-                headerLeftIcon={faBarsStaggered}
+                headerLeftIcon={"bars-staggered"}
                 showHeaderRight={false}
                 onPressLeft={navigation.openDrawer}
               />
