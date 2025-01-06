@@ -32,7 +32,6 @@
         "projectId": "c0fad226-3b50-4651-96b8-8ac182520cdd"
       },
       "plugins": [
-        "@react-native-firebase/app",
         [
           "@react-native-google-signin/google-signin",
           {

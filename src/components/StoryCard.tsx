@@ -44,7 +44,6 @@ const StoryCard: FC<StroyProps> = React.memo(({ item }) => {
         );
       })
       .catch((err) => {
-        console.log(err);
         setHasError(true);
       })
       .finally(() => {
@@ -128,12 +127,12 @@ const makeStyle = (colors: Colors) =>
     title: {
       fontSize: fontSize.h4,
       fontFamily: typography.medium,
-      color: colors.black,
+      color: colors.text,
     },
     description: {
       fontSize: fontSize.body,
       fontFamily: typography.regular,
-      color: colors.blackOlive,
+      color: colors.tertiary,
     },
     user: {
       marginTop: 10,
