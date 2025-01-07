@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect } from "react";
 import { useTheme } from "@react-navigation/native";
 import { Colors, fontSize, typography } from "src/theme";
@@ -15,13 +22,25 @@ const UserProfile = () => {
   const dispatch = useAppDispatch();
   const { colors } = useTheme();
   const styles = makeStyle(colors);
+  const call = () => {
+    Linking.openURL("tel:+911234567890");
+  };
+  const mail = (mailId: string) => {
+    Linking.openURL(`mailto:${mailId}`);
+  };
   return (
     <View style={styles.container}>
       <Image src={user?.picture} style={styles.profilePicture} />
       <Text style={styles.welcome}>Welcome, </Text>
       <Text style={styles.name}>{user?.name ?? "User"}</Text>
-      <Text style={styles.email}>Email : {user?.email}</Text>
-      <Text style={styles.email}>Phone : {user?.phone ?? ""}</Text>
+      <TouchableOpacity onPress={() => mail(user.email)}>
+        <Text style={styles.email}>Email : {user?.email}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={call}>
+        <Text style={styles.email}>
+          Phone : {user?.phone ?? "+911234567890"}
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.logoutBtn}
         onPress={() => {
